@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roman WFI Spectroscopy ASDF Schema Interactive Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-group label {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .control-group input, .control-group select {
+            padding: 5px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        #visualization {
+            width: 100%;
+            height: 800px;
+            background: #ffffff;
+        }
+
+        .node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .node:hover {
+            transform: scale(1.1);
+        }
+
+        .node-root {
+            fill: #28a745;
+            stroke: #1e7e34;
+            stroke-width: 3px;
+        }
+
+        .node-main-schema {
+            fill: #007bff;
+            stroke: #0056b3;
+            stroke-width: 2px;
+        }
+
+        .node-keyword-schema {
+            fill: #6f42c1;
+            stroke: #5a32a3;
+            stroke-width: 2px;
+        }
+
+        .node-property {
+            fill: #fd7e14;
+            stroke: #e8590c;
+            stroke-width: 1px;
+        }
+
+        .link {
+            fill: none;
+            stroke: #6c757d;
+            stroke-width: 2px;
+            stroke-opacity: 0.6;
+        }
+
+        .node-text {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            text-anchor: middle;
+            dominant-baseline: central;
+            fill: white;
+            pointer-events: none;
+        }
+
+        .node-text-root {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .node-text-main {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 300px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 8px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Roman WFI Spectroscopy ASDF Schemas</h1>
+            <p>Interactive visualization of the hierarchical schema structure for Level 4 data products</p>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="layout-select">Layout:</label>
+                <select id="layout-select">
+                    <option value="tree">Tree</option>
+                    <option value="radial">Radial</option>
+                    <option value="force">Force-directed</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="depth-slider">Max Depth:</label>
+                <input type="range" id="depth-slider" min="1" max="4" value="4">
+                <span id="depth-value">4</span>
+            </div>
+            <div class="control-group">
+                <label for="node-size">Node Size:</label>
+                <input type="range" id="node-size" min="5" max="25" value="12">
+            </div>
+        </div>
+
+        <div style="position: relative;">
+            <svg id="visualization"></svg>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #28a745; border-color: #1e7e34;"></div>
+                    <span>Root Schema</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #007bff; border-color: #0056b3;"></div>
+                    <span>Main Schemas</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #6f42c1; border-color: #5a32a3;"></div>
+                    <span>Keyword Schemas</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #fd7e14; border-color: #e8590c;"></div>
+                    <span>Properties</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tooltip"></div>
+
+    <script>
+        // Schema data structure
+        const schemaData = {
+            "name": "WFI Spectroscopy ASDF Schemas",
+            "type": "root",
+            "children": [
+                {
+                    "name": "Level 4 Grism/Prism - Catalog",
+                    "type": "main_schema",
+                    "id": "wfi_spec_catalog_level_4",
+                    "description": "Catalog of detected sources from spectroscopic observations",
+                    "children": [
+                        {
+                            "name": "GDPS observation keywords",
+                            "type": "keyword_schema",
+                            "id": "observation",
+                            "children": [
+                                {"name": "ID_OBS: Observation ID", "type": "property", "datatype": "string"},
+                                {"name": "FILESET_ID: Dataset ID", "type": "property", "datatype": "string"},
+                                {"name": "PROGNUM: Program number", "type": "property", "datatype": "string"},
+                                {"name": "SEGMENT: Segment number", "type": "property", "datatype": "string"},
+                                {"name": "VISNUM: Visit number", "type": "property", "datatype": "string"}
+                            ]
+                        },
+                        {
+                            "name": "GDPS instrument keywords",
+                            "type": "keyword_schema",
+                            "id": "instrument",
+                            "children": [
+                                {"name": "optical_element: WFI Optical Element", "type": "property", "datatype": "string"}
+                            ]
+                        },
+                        {
+                            "name": "GDPS catalog keywords",
+                            "type": "keyword_schema",
+                            "id": "catalog",
+                            "children": [
+                                {"name": "id_catalog: Catalog ID", "type": "property", "datatype": "string"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Level 4 Grism/Prism - 1D Combined Spectrum",
+                    "type": "main_schema",
+                    "id": "wfi_spec_combined_1d_level_4",
+                    "description": "Combined 1D spectrum for each detected source",
+                    "children": [
+                        {
+                            "name": "GDPS observation keywords",
+                            "type": "keyword_schema",
+                            "id": "observation"
+                        },
+                        {
+                            "name": "GDPS instrument keywords",
+                            "type": "keyword_schema",
+                            "id": "instrument"
+                        },
+                        {
+                            "name": "GDPS calibration keywords",
+                            "type": "keyword_schema",
+                            "id": "calibration",
+                            "children": [
+                                {"name": "version_cdp_cal_file: CDP calibration reference file", "type": "property", "datatype": "string"}
+                            ]
+                        },
+                        {
+                            "name": "GDPS wavelength keywords",
+                            "type": "keyword_schema",
+                            "id": "wavelength",
+                            "children": [
+                                {"name": "wl_contamination_range: Wl Contamination Range", "type": "property", "datatype": "string"},
+                                {"name": "wl_reference: Wl Reference", "type": "property", "datatype": "string"},
+                                {"name": "unit_flux: Unit of flux", "type": "property", "datatype": "string"},
+                                {"name": "unit_wl: Unit of wavelength", "type": "property", "datatype": "string"}
+                            ]
+                        },
+                        {
+                            "name": "GDPS pointing keywords",
+                            "type": "keyword_schema",
+                            "id": "pointing",
+                            "children": [
+                                {"name": "pos_wcs_field_center_ra: Field Center RA", "type": "property", "datatype": "number"},
+                                {"name": "pos_wcs_field_center_dec: Field Center Dec", "type": "property", "datatype": "number"}
+                            ]
+                        },
+                        {
+                            "name": "G2DP common keywords",
+                            "type": "keyword_schema",
+                            "id": "g2dp_common",
+                            "children": [
+                                {"name": "version_g2dp_software: G2DP Software Version", "type": "property", "datatype": "string"},
+                                {"name": "id_g2dp_run: G2DP Run ID", "type": "property", "datatype": "string"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Level 4 Grism/Prism - 1D Individual Spectrum",
+                    "type": "main_schema",
+                    "id": "wfi_spec_individual_1d_level_4",
+                    "description": "Individual 1D derived spectrum for each source",
+                    "children": [
+                        {"name": "GDPS observation keywords", "type": "keyword_schema", "id": "observation"},
+                        {"name": "GDPS instrument keywords", "type": "keyword_schema", "id": "instrument"},
+                        {"name": "GDPS calibration keywords", "type": "keyword_schema", "id": "calibration"},
+                        {"name": "GDPS wavelength keywords", "type": "keyword_schema", "id": "wavelength"},
+                        {"name": "GDPS pointing keywords", "type": "keyword_schema", "id": "pointing"},
+                        {"name": "G2DP common keywords", "type": "keyword_schema", "id": "g2dp_common"}
+                    ]
+                },
+                {
+                    "name": "Level 4 Grism/Prism - 2D Decontaminated Spectra",
+                    "type": "main_schema",
+                    "id": "wfi_spec_decontaminated_2d_level_4",
+                    "description": "2D decontaminated spectral data",
+                    "children": [
+                        {"name": "GDPS observation keywords", "type": "keyword_schema", "id": "observation"},
+                        {"name": "GDPS instrument keywords", "type": "keyword_schema", "id": "instrument"},
+                        {"name": "GDPS calibration keywords", "type": "keyword_schema", "id": "calibration"},
+                        {"name": "GDPS wavelength keywords", "type": "keyword_schema", "id": "wavelength"},
+                        {"name": "GDPS pointing keywords", "type": "keyword_schema", "id": "pointing"},
+                        {"name": "G2DP common keywords", "type": "keyword_schema", "id": "g2dp_common"}
+                    ]
+                },
+                {
+                    "name": "Level 4 Grism/Prism - Data Quality",
+                    "type": "main_schema",
+                    "id": "wfi_spec_data_quality_level_4",
+                    "description": "Data quality information for spectroscopic observations",
+                    "children": [
+                        {"name": "GDPS observation keywords", "type": "keyword_schema", "id": "observation"},
+                        {"name": "GDPS instrument keywords", "type": "keyword_schema", "id": "instrument"},
+                        {"name": "GDPS catalog keywords", "type": "keyword_schema", "id": "catalog"}
+                    ]
+                },
+                {
+                    "name": "Level 4 Grism/Prism - Spectra Location Table",
+                    "type": "main_schema",
+                    "id": "wfi_spec_location_table_level_4",
+                    "description": "Location table for spectral sources",
+                    "children": [
+                        {"name": "GDPS observation keywords", "type": "keyword_schema", "id": "observation"},
+                        {"name": "GDPS instrument keywords", "type": "keyword_schema", "id": "instrument"},
+                        {
+                            "name": "GDPS location_table keywords",
+                            "type": "keyword_schema",
+                            "id": "location_table",
+                            "children": [
+                                {"name": "dither: Dither", "type": "property", "datatype": "number"},
+                                {"name": "nsrc: Nsrc", "type": "property", "datatype": "number"},
+                                {"name": "optical_model: Optical Model", "type": "property", "datatype": "string"},
+                                {"name": "v3yangle: V3Yangle", "type": "property", "datatype": "number"}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Visualization setup
+        const svg = d3.select("#visualization");
+        const width = 1360;
+        const height = 800;
+        svg.attr("width", width).attr("height", height);
+
+        const g = svg.append("g");
+        const tooltip = d3.select(".tooltip");
+
+        let currentLayout = "tree";
+        let maxDepth = 4;
+        let nodeSize = 12;
+
+        // Color schemes
+        const colors = {
+            root: "#28a745",
+            main_schema: "#007bff",
+            keyword_schema: "#6f42c1",
+            property: "#fd7e14"
+        };
+
+        // Control event listeners
+        d3.select("#layout-select").on("change", function() {
+            currentLayout = this.value;
+            updateVisualization();
+        });
+
+        d3.select("#depth-slider").on("input", function() {
+            maxDepth = +this.value;
+            d3.select("#depth-value").text(maxDepth);
+            updateVisualization();
+        });
+
+        d3.select("#node-size").on("input", function() {
+            nodeSize = +this.value;
+            updateVisualization();
+        });
+
+        function filterByDepth(node, depth = 0) {
+            if (depth >= maxDepth) {
+                return { ...node, children: null };
+            }
+            return {
+                ...node,
+                children: node.children ? node.children.map(child => filterByDepth(child, depth + 1)) : null
+            };
+        }
+
+        function updateVisualization() {
+            g.selectAll("*").remove();
+
+            const filteredData = filterByDepth(schemaData);
+            
+            if (currentLayout === "tree") {
+                drawTreeLayout(filteredData);
+            } else if (currentLayout === "radial") {
+                drawRadialLayout(filteredData);
+            } else if (currentLayout === "force") {
+                drawForceLayout(filteredData);
+            }
+        }
+
+        function drawTreeLayout(data) {
+            const treeLayout = d3.tree().size([height - 100, width - 200]);
+            const root = d3.hierarchy(data);
+            treeLayout(root);
+
+            // Adjust positions
+            root.descendants().forEach(d => {
+                d.y += 100;
+                d.x += 50;
+            });
+
+            // Draw links
+            g.selectAll(".link")
+                .data(root.links())
+                .enter().append("path")
+                .attr("class", "link")
+                .attr("d", d3.linkHorizontal()
+                    .x(d => d.y)
+                    .y(d => d.x));
+
+            // Draw nodes
+            const node = g.selectAll(".node")
+                .data(root.descendants())
+                .enter().append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${d.y},${d.x})`);
+
+            node.append("circle")
+                .attr("r", d => {
+                    if (d.data.type === "root") return nodeSize + 8;
+                    if (d.data.type === "main_schema") return nodeSize + 4;
+                    if (d.data.type === "keyword_schema") return nodeSize + 2;
+                    return nodeSize;
+                })
+                .attr("class", d => `node-${d.data.type.replace('_', '-')}`)
+                .style("fill", d => colors[d.data.type] || "#6c757d");
+
+            node.append("text")
+                .attr("class", d => `node-text node-text-${d.data.type.split('_')[0]}`)
+                .attr("dy", "0.35em")
+                .style("font-size", d => {
+                    if (d.data.type === "root") return "14px";
+                    if (d.data.type === "main_schema") return "12px";
+                    return "10px";
+                })
+                .text(d => {
+                    const name = d.data.name;
+                    if (name.length > 20) return name.substring(0, 20) + "...";
+                    return name;
+                });
+
+            addTooltips(node);
+        }
+
+        function drawRadialLayout(data) {
+            const radius = Math.min(width, height) / 2 - 100;
+            const tree = d3.tree().size([2 * Math.PI, radius]);
+            const root = d3.hierarchy(data);
+            tree(root);
+
+            const radialG = g.append("g")
+                .attr("transform", `translate(${width/2},${height/2})`);
+
+            // Draw links
+            radialG.selectAll(".link")
+                .data(root.links())
+                .enter().append("path")
+                .attr("class", "link")
+                .attr("d", d3.linkRadial()
+                    .angle(d => d.x)
+                    .radius(d => d.y));
+
+            // Draw nodes
+            const node = radialG.selectAll(".node")
+                .data(root.descendants())
+                .enter().append("g")
+                .attr("class", "node")
+                .attr("transform", d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`);
+
+            node.append("circle")
+                .attr("r", d => {
+                    if (d.data.type === "root") return nodeSize + 6;
+                    if (d.data.type === "main_schema") return nodeSize + 3;
+                    if (d.data.type === "keyword_schema") return nodeSize + 1;
+                    return nodeSize - 2;
+                })
+                .style("fill", d => colors[d.data.type] || "#6c757d");
+
+            node.append("text")
+                .attr("class", "node-text")
+                .attr("dy", "0.35em")
+                .attr("x", d => d.x < Math.PI === !d.children ? 6 : -6)
+                .style("text-anchor", d => d.x < Math.PI === !d.children ? "start" : "end")
+                .attr("transform", d => d.x >= Math.PI ? "rotate(180)" : null)
+                .style("font-size", "10px")
+                .text(d => {
+                    const name = d.data.name;
+                    if (name.length > 15) return name.substring(0, 15) + "...";
+                    return name;
+                });
+
+            addTooltips(node);
+        }
+
+        function drawForceLayout(data) {
+            const nodes = [];
+            const links = [];
+
+            function traverse(node, parent = null) {
+                nodes.push(node);
+                if (parent) {
+                    links.push({ source: parent, target: node });
+                }
+                if (node.children) {
+                    node.children.forEach(child => traverse(child, node));
+                }
+            }
+
+            traverse(data);
+
+            const simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(links).id(d => d.name).distance(100))
+                .force("charge", d3.forceManyBody().strength(-300))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collision", d3.forceCollide().radius(30));
+
+            // Draw links
+            const link = g.selectAll(".link")
+                .data(links)
+                .enter().append("line")
+                .attr("class", "link");
+
+            // Draw nodes
+            const node = g.selectAll(".node")
+                .data(nodes)
+                .enter().append("g")
+                .attr("class", "node")
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+
+            node.append("circle")
+                .attr("r", d => {
+                    if (d.type === "root") return nodeSize + 8;
+                    if (d.type === "main_schema") return nodeSize + 4;
+                    if (d.type === "keyword_schema") return nodeSize + 2;
+                    return nodeSize;
+                })
+                .style("fill", d => colors[d.type] || "#6c757d");
+
+            node.append("text")
+                .attr("class", "node-text")
+                .attr("dy", "0.35em")
+                .style("font-size", "10px")
+                .text(d => {
+                    const name = d.name;
+                    if (name.length > 12) return name.substring(0, 12) + "...";
+                    return name;
+                });
+
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node.attr("transform", d => `translate(${d.x},${d.y})`);
+            });
+
+            addTooltips(node);
+
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+        }
+
+        function addTooltips(selection) {
+            selection
+                .on("mouseover", function(event, d) {
+                    let content = `<strong>${d.data ? d.data.name : d.name}</strong><br>`;
+                    content += `Type: ${d.data ? d.data.type : d.type}<br>`;
+                    
+                    if ((d.data && d.data.description) || d.description) {
+                        content += `Description: ${(d.data && d.data.description) || d.description}<br>`;
+                    }
+                    
+                    if ((d.data && d.data.datatype) || d.datatype) {
+                        content += `Data Type: ${(d.data && d.data.datatype) || d.datatype}`;
+                    }
+
+                    tooltip.html(content)
+                        .style("opacity", 1)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 10) + "px");
+                })
+                .on("mouseout", function() {
+                    tooltip.style("opacity", 0);
+                });
+        }
+
+        // Initialize visualization
+        updateVisualization();
+    </script>
+</body>
+</html>

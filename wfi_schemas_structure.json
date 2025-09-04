@@ -1,0 +1,723 @@
+{
+  "name": "WFI Spectroscopy ASDF Schemas",
+  "type": "root",
+  "children": [
+    {
+      "name": "Level 4 Grism/Prism - 1D Derived Spectrum for each Source",
+      "type": "main_schema",
+      "id": "wfi_spec_individual_1d_level_4",
+      "children": [
+        {
+          "name": "GDPS observation keywords",
+          "type": "keyword_schema",
+          "id": "observation",
+          "children": [
+            {
+              "name": "ID_OBS: Observation ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '0000101001001001001'"
+            },
+            {
+              "name": "FILESET_ID: Dataset ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "The Level 2 WFI dataset ID, e.g., 'r0017001001001001006_0002_wfi16_f087'"
+            },
+            {
+              "name": "PROGNUM: Program number",
+              "type": "property",
+              "datatype": "string",
+              "description": "ID number assigned to the proposal"
+            },
+            {
+              "name": "SEGMENT: Segment number",
+              "type": "property",
+              "datatype": "string",
+              "description": "The sequence of activities produced by each iteration of a Segment Plan (Observation Sequence) in a Pass"
+            },
+            {
+              "name": "VISNUM: Visit number",
+              "type": "property",
+              "datatype": "string",
+              "description": "Visit number within a program"
+            },
+            {
+              "name": "PROGRAM_COMPLETE: Program Complete",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'False'"
+            }
+          ]
+        },
+        {
+          "name": "GDPS instrument keywords",
+          "type": "keyword_schema",
+          "id": "instrument",
+          "children": [
+            {
+              "name": "optical_element: WFI Optical Element",
+              "type": "property",
+              "datatype": "string",
+              "description": "Name of the optical element used to take the science\ndata (\"GRISM\" or \"PRISM\").\n"
+            }
+          ]
+        },
+        {
+          "name": "GDPS calibration keywords",
+          "type": "keyword_schema",
+          "id": "calibration",
+          "children": [
+            {
+              "name": "version_cdp_cal_file: CDP calibration reference file",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'roman_wfi_skycells_0003.asdf'"
+            }
+          ]
+        },
+        {
+          "name": "GDPS wavelength keywords",
+          "type": "keyword_schema",
+          "id": "wavelength",
+          "children": [
+            {
+              "name": "wl_contamination_range: Wl Contamination Range",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '[14000.0, 16000.0]'"
+            },
+            {
+              "name": "wl_reference: Wl Reference",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '1.55'"
+            },
+            {
+              "name": "wl_snr_global_range: Wl Snr Global Range",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '[0.0]'"
+            },
+            {
+              "name": "unit_flux: Unit of flux",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 's'"
+            },
+            {
+              "name": "unit_wl: Unit of wavelength",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'nm'"
+            },
+            {
+              "name": "phot_filter_cut_off: Phot Filter Cut Off",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'F158'"
+            }
+          ]
+        },
+        {
+          "name": "GDPS pointing keywords",
+          "type": "keyword_schema",
+          "id": "pointing",
+          "children": [
+            {
+              "name": "pos_wcs_field_center_ra: Field Center RA",
+              "type": "property",
+              "datatype": "number",
+              "description": "Placeholder.  Example value '270.0'"
+            },
+            {
+              "name": "pos_wcs_field_center_dec: Field Center Dec",
+              "type": "property",
+              "datatype": "number",
+              "description": "Placeholder.  Example value '66.0'"
+            }
+          ]
+        },
+        {
+          "name": "G2DP common keywords",
+          "type": "keyword_schema",
+          "id": "g2dp_common",
+          "children": [
+            {
+              "name": "version_g2dp_software: G2DP Software Version",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'dev'"
+            },
+            {
+              "name": "id_g2dp_run: G2DP Run ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'placeholder'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Level 4 Grism/Prism - Spectra Location Table",
+      "type": "main_schema",
+      "id": "wfi_spec_location_table_level_4",
+      "children": [
+        {
+          "name": "GDPS observation keywords",
+          "type": "keyword_schema",
+          "id": "observation",
+          "children": [
+            {
+              "name": "ID_OBS: Observation ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '0000101001001001001'"
+            },
+            {
+              "name": "FILESET_ID: Dataset ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "The Level 2 WFI dataset ID, e.g., 'r0017001001001001006_0002_wfi16_f087'"
+            },
+            {
+              "name": "PROGNUM: Program number",
+              "type": "property",
+              "datatype": "string",
+              "description": "ID number assigned to the proposal"
+            },
+            {
+              "name": "SEGMENT: Segment number",
+              "type": "property",
+              "datatype": "string",
+              "description": "The sequence of activities produced by each iteration of a Segment Plan (Observation Sequence) in a Pass"
+            },
+            {
+              "name": "VISNUM: Visit number",
+              "type": "property",
+              "datatype": "string",
+              "description": "Visit number within a program"
+            },
+            {
+              "name": "PROGRAM_COMPLETE: Program Complete",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'False'"
+            }
+          ]
+        },
+        {
+          "name": "GDPS instrument keywords",
+          "type": "keyword_schema",
+          "id": "instrument",
+          "children": [
+            {
+              "name": "optical_element: WFI Optical Element",
+              "type": "property",
+              "datatype": "string",
+              "description": "Name of the optical element used to take the science\ndata (\"GRISM\" or \"PRISM\").\n"
+            }
+          ]
+        },
+        {
+          "name": "GDPS location_table keywords",
+          "type": "keyword_schema",
+          "id": "location_table",
+          "children": [
+            {
+              "name": "dither: Dither",
+              "type": "property",
+              "datatype": "number",
+              "description": "Placeholder.  Example value '1'"
+            },
+            {
+              "name": "nsrc: Nsrc",
+              "type": "property",
+              "datatype": "number",
+              "description": "Placeholder.  Example value '360'"
+            },
+            {
+              "name": "optical_model: Optical Model",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'roman_gdps_grism_optmodel_ctx00002.yaml'"
+            },
+            {
+              "name": "v3yangle: V3Yangle",
+              "type": "property",
+              "datatype": "number",
+              "description": "Placeholder.  Example value '-60.0'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Level 4 Grism/Prism - Catalog",
+      "type": "main_schema",
+      "id": "wfi_spec_catalog_level_4",
+      "children": [
+        {
+          "name": "GDPS observation keywords",
+          "type": "keyword_schema",
+          "id": "observation",
+          "children": [
+            {
+              "name": "ID_OBS: Observation ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '0000101001001001001'"
+            },
+            {
+              "name": "FILESET_ID: Dataset ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "The Level 2 WFI dataset ID, e.g., 'r0017001001001001006_0002_wfi16_f087'"
+            },
+            {
+              "name": "PROGNUM: Program number",
+              "type": "property",
+              "datatype": "string",
+              "description": "ID number assigned to the proposal"
+            },
+            {
+              "name": "SEGMENT: Segment number",
+              "type": "property",
+              "datatype": "string",
+              "description": "The sequence of activities produced by each iteration of a Segment Plan (Observation Sequence) in a Pass"
+            },
+            {
+              "name": "VISNUM: Visit number",
+              "type": "property",
+              "datatype": "string",
+              "description": "Visit number within a program"
+            },
+            {
+              "name": "PROGRAM_COMPLETE: Program Complete",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'False'"
+            }
+          ]
+        },
+        {
+          "name": "GDPS instrument keywords",
+          "type": "keyword_schema",
+          "id": "instrument",
+          "children": [
+            {
+              "name": "optical_element: WFI Optical Element",
+              "type": "property",
+              "datatype": "string",
+              "description": "Name of the optical element used to take the science\ndata (\"GRISM\" or \"PRISM\").\n"
+            }
+          ]
+        },
+        {
+          "name": "GDPS catalog keywords",
+          "type": "keyword_schema",
+          "id": "catalog",
+          "children": [
+            {
+              "name": "id_catalog: Catalog ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '0001'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Level 4 Grism/Prism - 2D Decontaminated Spectra",
+      "type": "main_schema",
+      "id": "wfi_spec_decontaminated_2d_level_4",
+      "children": [
+        {
+          "name": "GDPS observation keywords",
+          "type": "keyword_schema",
+          "id": "observation",
+          "children": [
+            {
+              "name": "ID_OBS: Observation ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '0000101001001001001'"
+            },
+            {
+              "name": "FILESET_ID: Dataset ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "The Level 2 WFI dataset ID, e.g., 'r0017001001001001006_0002_wfi16_f087'"
+            },
+            {
+              "name": "PROGNUM: Program number",
+              "type": "property",
+              "datatype": "string",
+              "description": "ID number assigned to the proposal"
+            },
+            {
+              "name": "SEGMENT: Segment number",
+              "type": "property",
+              "datatype": "string",
+              "description": "The sequence of activities produced by each iteration of a Segment Plan (Observation Sequence) in a Pass"
+            },
+            {
+              "name": "VISNUM: Visit number",
+              "type": "property",
+              "datatype": "string",
+              "description": "Visit number within a program"
+            },
+            {
+              "name": "PROGRAM_COMPLETE: Program Complete",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'False'"
+            }
+          ]
+        },
+        {
+          "name": "GDPS instrument keywords",
+          "type": "keyword_schema",
+          "id": "instrument",
+          "children": [
+            {
+              "name": "optical_element: WFI Optical Element",
+              "type": "property",
+              "datatype": "string",
+              "description": "Name of the optical element used to take the science\ndata (\"GRISM\" or \"PRISM\").\n"
+            }
+          ]
+        },
+        {
+          "name": "GDPS calibration keywords",
+          "type": "keyword_schema",
+          "id": "calibration",
+          "children": [
+            {
+              "name": "version_cdp_cal_file: CDP calibration reference file",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'roman_wfi_skycells_0003.asdf'"
+            }
+          ]
+        },
+        {
+          "name": "GDPS wavelength keywords",
+          "type": "keyword_schema",
+          "id": "wavelength",
+          "children": [
+            {
+              "name": "wl_contamination_range: Wl Contamination Range",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '[14000.0, 16000.0]'"
+            },
+            {
+              "name": "wl_reference: Wl Reference",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '1.55'"
+            },
+            {
+              "name": "wl_snr_global_range: Wl Snr Global Range",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '[0.0]'"
+            },
+            {
+              "name": "unit_flux: Unit of flux",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 's'"
+            },
+            {
+              "name": "unit_wl: Unit of wavelength",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'nm'"
+            },
+            {
+              "name": "phot_filter_cut_off: Phot Filter Cut Off",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'F158'"
+            }
+          ]
+        },
+        {
+          "name": "GDPS pointing keywords",
+          "type": "keyword_schema",
+          "id": "pointing",
+          "children": [
+            {
+              "name": "pos_wcs_field_center_ra: Field Center RA",
+              "type": "property",
+              "datatype": "number",
+              "description": "Placeholder.  Example value '270.0'"
+            },
+            {
+              "name": "pos_wcs_field_center_dec: Field Center Dec",
+              "type": "property",
+              "datatype": "number",
+              "description": "Placeholder.  Example value '66.0'"
+            }
+          ]
+        },
+        {
+          "name": "G2DP common keywords",
+          "type": "keyword_schema",
+          "id": "g2dp_common",
+          "children": [
+            {
+              "name": "version_g2dp_software: G2DP Software Version",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'dev'"
+            },
+            {
+              "name": "id_g2dp_run: G2DP Run ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'placeholder'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Level 4 Grism/Prism - Data Quality",
+      "type": "main_schema",
+      "id": "wfi_spec_data_quality_level_4",
+      "children": [
+        {
+          "name": "GDPS observation keywords",
+          "type": "keyword_schema",
+          "id": "observation",
+          "children": [
+            {
+              "name": "ID_OBS: Observation ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '0000101001001001001'"
+            },
+            {
+              "name": "FILESET_ID: Dataset ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "The Level 2 WFI dataset ID, e.g., 'r0017001001001001006_0002_wfi16_f087'"
+            },
+            {
+              "name": "PROGNUM: Program number",
+              "type": "property",
+              "datatype": "string",
+              "description": "ID number assigned to the proposal"
+            },
+            {
+              "name": "SEGMENT: Segment number",
+              "type": "property",
+              "datatype": "string",
+              "description": "The sequence of activities produced by each iteration of a Segment Plan (Observation Sequence) in a Pass"
+            },
+            {
+              "name": "VISNUM: Visit number",
+              "type": "property",
+              "datatype": "string",
+              "description": "Visit number within a program"
+            },
+            {
+              "name": "PROGRAM_COMPLETE: Program Complete",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'False'"
+            }
+          ]
+        },
+        {
+          "name": "GDPS instrument keywords",
+          "type": "keyword_schema",
+          "id": "instrument",
+          "children": [
+            {
+              "name": "optical_element: WFI Optical Element",
+              "type": "property",
+              "datatype": "string",
+              "description": "Name of the optical element used to take the science\ndata (\"GRISM\" or \"PRISM\").\n"
+            }
+          ]
+        },
+        {
+          "name": "GDPS catalog keywords",
+          "type": "keyword_schema",
+          "id": "catalog",
+          "children": [
+            {
+              "name": "id_catalog: Catalog ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '0001'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Level 4 Grism/Prism - 1D Combined Spectrum for each Source",
+      "type": "main_schema",
+      "id": "wfi_spec_combined_1d_level_4",
+      "children": [
+        {
+          "name": "GDPS observation keywords",
+          "type": "keyword_schema",
+          "id": "observation",
+          "children": [
+            {
+              "name": "ID_OBS: Observation ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '0000101001001001001'"
+            },
+            {
+              "name": "FILESET_ID: Dataset ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "The Level 2 WFI dataset ID, e.g., 'r0017001001001001006_0002_wfi16_f087'"
+            },
+            {
+              "name": "PROGNUM: Program number",
+              "type": "property",
+              "datatype": "string",
+              "description": "ID number assigned to the proposal"
+            },
+            {
+              "name": "SEGMENT: Segment number",
+              "type": "property",
+              "datatype": "string",
+              "description": "The sequence of activities produced by each iteration of a Segment Plan (Observation Sequence) in a Pass"
+            },
+            {
+              "name": "VISNUM: Visit number",
+              "type": "property",
+              "datatype": "string",
+              "description": "Visit number within a program"
+            },
+            {
+              "name": "PROGRAM_COMPLETE: Program Complete",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'False'"
+            }
+          ]
+        },
+        {
+          "name": "GDPS instrument keywords",
+          "type": "keyword_schema",
+          "id": "instrument",
+          "children": [
+            {
+              "name": "optical_element: WFI Optical Element",
+              "type": "property",
+              "datatype": "string",
+              "description": "Name of the optical element used to take the science\ndata (\"GRISM\" or \"PRISM\").\n"
+            }
+          ]
+        },
+        {
+          "name": "GDPS calibration keywords",
+          "type": "keyword_schema",
+          "id": "calibration",
+          "children": [
+            {
+              "name": "version_cdp_cal_file: CDP calibration reference file",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'roman_wfi_skycells_0003.asdf'"
+            }
+          ]
+        },
+        {
+          "name": "GDPS wavelength keywords",
+          "type": "keyword_schema",
+          "id": "wavelength",
+          "children": [
+            {
+              "name": "wl_contamination_range: Wl Contamination Range",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '[14000.0, 16000.0]'"
+            },
+            {
+              "name": "wl_reference: Wl Reference",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '1.55'"
+            },
+            {
+              "name": "wl_snr_global_range: Wl Snr Global Range",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value '[0.0]'"
+            },
+            {
+              "name": "unit_flux: Unit of flux",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 's'"
+            },
+            {
+              "name": "unit_wl: Unit of wavelength",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'nm'"
+            },
+            {
+              "name": "phot_filter_cut_off: Phot Filter Cut Off",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'F158'"
+            }
+          ]
+        },
+        {
+          "name": "GDPS pointing keywords",
+          "type": "keyword_schema",
+          "id": "pointing",
+          "children": [
+            {
+              "name": "pos_wcs_field_center_ra: Field Center RA",
+              "type": "property",
+              "datatype": "number",
+              "description": "Placeholder.  Example value '270.0'"
+            },
+            {
+              "name": "pos_wcs_field_center_dec: Field Center Dec",
+              "type": "property",
+              "datatype": "number",
+              "description": "Placeholder.  Example value '66.0'"
+            }
+          ]
+        },
+        {
+          "name": "G2DP common keywords",
+          "type": "keyword_schema",
+          "id": "g2dp_common",
+          "children": [
+            {
+              "name": "version_g2dp_software: G2DP Software Version",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'dev'"
+            },
+            {
+              "name": "id_g2dp_run: G2DP Run ID",
+              "type": "property",
+              "datatype": "string",
+              "description": "Placeholder.  Example value 'placeholder'"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
